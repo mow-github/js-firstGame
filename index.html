@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <meta name="author" content="">
+  <title>Snake game</title>
+  <style>
+
+    *{
+      margin: 0;
+      padding: 0;
+/*      box-sizing: border-box;*/
+    }
+    body{
+      position: relative;
+      width: 100px;
+      height: 100px;
+      margin: 50px auto 0 auto;
+      border: 1px solid black;
+    }
+    #snake{
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: url("sprite_snake.svg") 0 0;
+      animation: playSnake .5s steps(4) infinite;
+      z-index: 999;
+    }
+    #fruit{
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: url("sprite_fruit.svg") 0 0;
+      animation: playFruit 1.5s steps(4) infinite;
+    }
+    @keyframes playSnake{
+      100% { background-position: -40px; }
+    }
+    @keyframes playFruit{
+      100% { background-position: -40px; }
+    }
+  </style>
+<!--  <link rel="stylesheet" href="css/main.css">
+  <script src="main.js" async></script>-->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+
+<p>Points: <span id="setPoints">0</span></p>
+
+  <script>
+
+    window.onload = function(){
+
+      let sum       = {sumLeft:0,sumTop:0};
+      let fruitPos  = {sumLeft:0,sumTop:0};
+      let score     = {pointsTot: 0}
+      let snake     = document.createElement("span");
+      let fruit     = document.createElement("span");
+      let pointsTag = document.getElementById("setPoints");
+      let timeEnd   = 0;
+      let timeStart = Date.now();
+      let logTime = [];
+      placeFruit();
+
+      snake.setAttribute("id", "snake");
+      document.body.appendChild(snake);
+      snake.style.left  = `${sum.sumLeft}px`;
+      snake.style.top   = `${sum.sumTop}px`;
+
+      fruit.setAttribute("id", "fruit");
+      document.body.appendChild(fruit);
+      fruit.style.left  = `${fruitPos.sumLeft}px`;
+      fruit.style.top   = `${fruitPos.sumTop}px`;
+
+
+      document.body.addEventListener("keypress", moveByKey, false);
+
+      function moveByKey(event){
+        switch (event.keyCode){
+          case 97:
+            newPosition("-","left","hor");
+            break;
+          case 100:
+            newPosition("+","left","hor");
+            break;
+          case 115:
+            newPosition("+","top","vert");
+            break;
+          case 119:
+            newPosition("-","top","vert");
+            break;
+        }
+      }
+
+      function newPosition(operand, position, direction){
+        if( direction == "hor" ){
+          if( operand == "-" && sum.sumLeft != 0 ){ sum.sumLeft -= 10;  snake.style.transform = "rotate(180deg)"; }
+          else if( operand == "+" && sum.sumLeft != 90 ){ sum.sumLeft += 10; snake.style.transform = "rotate(0deg)"; }
+          snake.style[position] = `${sum.sumLeft}px`;
+        }else if( direction == "vert" ){
+          if( operand == "-" && sum.sumTop != 0 ){ sum.sumTop -= 10; snake.style.transform = "rotate(270deg)"; }
+          else if( operand == "+" && sum.sumTop != 90){ sum.sumTop += 10; snake.style.transform = "rotate(90deg)";}
+          snake.style[position] = `${sum.sumTop}px`;
+        }
+
+        if( sum.sumLeft == fruitPos.sumLeft && sum.sumTop == fruitPos.sumTop ){
+          console.log("You took the fruit");
+          timeEnd = Date.now();
+          let t = ( timeEnd - timeStart ) / 1000;
+          logTime.push(t);
+          timeStart = Date.now(); // reset timer
+          console.log(logTime);
+          score.pointsTot += 1;
+          console.log(`-------------${score.pointsTot}----------------------`);
+          pointsTag.innerHTML = score.pointsTot;
+          placeFruit();
+        }
+      }
+
+      let setId = setInterval(function(){
+        if( score.pointsTot >= 4 ){ console.log("END---------------------------------------------");clearInterval(setId);           calcTime(); }
+        else{
+          placeFruit();
+        }
+      }, 5000);
+
+      function placeFruit(){
+        console.log("place fruit");
+        let posLeft = Math.floor(Math.random() * 10) *10;
+        let posTop = Math.floor(Math.random() * 10) *10;
+
+        if( sum.sumLeft == posLeft && sum.sumTop == posTop ){ return placeFruit() }
+        fruitPos.sumLeft = posLeft;
+        fruitPos.sumTop = posTop;
+        fruit.style.left  = `${posLeft}px`;
+        fruit.style.top   = `${posTop}px`;
+      }
+      let tot = 0;
+      function calcTime(){
+        console.log("calc");
+        logTime.map(function(val){
+         console.log( val );
+          tot += val;
+        });
+        console.log(tot);
+      }
+
+
+    } /* end: window.onload */
+  </script>
+</body>
+</html>
