@@ -5,7 +5,7 @@
 
 * Move with your keyboard: WASD-key
 * It tracks the time until you capture the snake
-* The console.log displays the total time when one capture 4x fruits ( one can still continue to capture more snakes )
+* The console.log displays the total time when one capture 4x fruits ( one can still continue to capture more fruits )
 * It tracks every point
 * It places a random fruit and it can not be on same position as the snake
 * The snake can't move outside the box
