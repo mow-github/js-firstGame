@@ -15,7 +15,7 @@
       padding: 0;
 /*      box-sizing: border-box;*/
     }
-    body{
+    #box{
       position: relative;
       width: 100px;
       height: 100px;
@@ -53,7 +53,15 @@
 </head>
 <body>
 
-<p>Points: <span id="setPoints">0</span></p>
+  <div id="box">
+    <p>Points: <span id="setPoints">0</span></p>
+  </div>
+
+  <h3>output data</h3>
+  <div id="output">
+
+    <!-- dyn data -->
+  </div>
 
   <script>
 
@@ -65,18 +73,20 @@
       let snake     = document.createElement("span");
       let fruit     = document.createElement("span");
       let pointsTag = document.getElementById("setPoints");
+      let box       = document.getElementById("box");
+      let output    = document.getElementById("output");
       let timeEnd   = 0;
       let timeStart = Date.now();
       let logTime = [];
       placeFruit();
 
       snake.setAttribute("id", "snake");
-      document.body.appendChild(snake);
+      box.appendChild(snake);
       snake.style.left  = `${sum.sumLeft}px`;
       snake.style.top   = `${sum.sumTop}px`;
 
       fruit.setAttribute("id", "fruit");
-      document.body.appendChild(fruit);
+      box.appendChild(fruit);
       fruit.style.left  = `${fruitPos.sumLeft}px`;
       fruit.style.top   = `${fruitPos.sumTop}px`;
 
@@ -112,14 +122,14 @@
         }
 
         if( sum.sumLeft == fruitPos.sumLeft && sum.sumTop == fruitPos.sumTop ){
-          console.log("You took the fruit");
+          outputData("You took the fruit");
           timeEnd = Date.now();
           let t = ( timeEnd - timeStart ) / 1000;
           logTime.push(t);
           timeStart = Date.now(); // reset timer
-          console.log(logTime);
+          outputData("You took the fruit in: "+logTime[logTime.length-1]+" seconds");
           score.pointsTot += 1;
-          console.log(`-------------${score.pointsTot}----------------------`);
+          outputData(score.pointsTot+ " points");
           pointsTag.innerHTML = score.pointsTot;
           placeFruit();
         }
@@ -133,7 +143,8 @@
       }, 5000);
 
       function placeFruit(){
-        console.log("place fruit");
+
+        outputData("The fruit is placed");
         let posLeft = Math.floor(Math.random() * 10) *10;
         let posTop = Math.floor(Math.random() * 10) *10;
 
@@ -143,14 +154,21 @@
         fruit.style.left  = `${posLeft}px`;
         fruit.style.top   = `${posTop}px`;
       }
+
       let tot = 0;
       function calcTime(){
-        console.log("calc");
         logTime.map(function(val){
-         console.log( val );
           tot += val;
         });
-        console.log(tot);
+
+        outputData("You finished the game in:"+tot+" seconds");
+      }
+
+      function outputData(text) {
+        let p = document.createElement("p")                // Create a <h1> element
+        let t = document.createTextNode(`${new Date().toTimeString()} ${text}`);
+        p.appendChild(t);
+        output.appendChild(p);
       }
 
 
